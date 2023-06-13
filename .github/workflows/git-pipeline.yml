@@ -13,8 +13,8 @@ jobs:
     steps:
     - name: Installing ansible 
       run: |
-        sudo apt-get  update  -y
-        sudo apt  install   -y  ansible
+        sudo apt-get  update -y
+        sudo apt install -y ansible
         ansible --version
 
 # Script to install ansible-lint :
