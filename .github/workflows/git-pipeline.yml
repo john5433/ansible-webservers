@@ -36,16 +36,5 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Linting ansible playbooks
-      run: |
-        ansible-lint
-
-
-  install_apache:
-    needs: run_ansible_lint
-    runs-on: self-hosted
-    steps:
-    - name: Installing apache
-      run: |
-        workdir="${GITHUB_WORKSPACE}"
-        ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/apache-install.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
+      run: ansible-lint
 
