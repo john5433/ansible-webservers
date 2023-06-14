@@ -38,7 +38,6 @@ jobs:
     - name: Linting ansible playbooks
       run: ansible-lint
 
-
   install_apache:
     needs: run_ansible_lint
     runs-on: self-hosted
