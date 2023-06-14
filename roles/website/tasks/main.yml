@@ -41,7 +41,7 @@
   lineinfile:
     path: "{{ file_path }}/vars.html"
     line: "<p>File {{ i.stat.path }} exists.</p>"
- ignore_errors: "{{ ansible_check_mode }}"
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Set a fact within a role
   set_fact:
