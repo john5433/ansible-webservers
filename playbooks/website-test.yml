@@ -29,7 +29,7 @@
       success_msg: "/usr/sbin/apache2 exists"
 
   - name: Verify apache2 is enabled
-    shell: systemd list-unit-files | grep apache2.service | awk -F\  '{print $2}'
+    shell: systemd list-unit-files | grep apache2.service | awk   '{print $2}'
     register: c
 
   - name: Fail if apache2 is not enabled
