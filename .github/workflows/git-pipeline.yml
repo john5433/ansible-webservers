@@ -52,9 +52,9 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: website updating
-         run: |
-           workdir="${GITHUB_WORKSPACE}"
-           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-update.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
+        run: |
+          workdir="${GITHUB_WORKSPACE}"
+          ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-update.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
   website-test:
     needs: website-update
     runs-on: self-hosted
@@ -62,4 +62,4 @@ jobs:
       - name: website testing
         run: |
           workdir="${GITHUB_WORKSPACE}"
-          ANSIBLE_HOST_KEY_CHECKING=False export    ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
+          ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
