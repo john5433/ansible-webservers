@@ -37,7 +37,7 @@
   register: i
 
 - name: Insert a line when condition is true
-  when: "{{ i.stat.exists }} == 'true'"
+  when: i.stat.exists == true
   lineinfile:
     path: "{{ file_path }}/vars.html"
     line: "<p>File {{ i.stat.path }} exists.</p>"
