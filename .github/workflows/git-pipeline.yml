@@ -65,6 +65,7 @@ jobs:
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
 
   messageSlack:
+     needs: repo_updated
      runs-on: self-hosted
      steps:
      - name: Notification Slack
