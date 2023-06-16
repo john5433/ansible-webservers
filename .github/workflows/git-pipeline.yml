@@ -64,20 +64,6 @@ jobs:
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
 
-name: Notifier
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-jobs:
-  messageSlack:
-    runs-on: self-hosted
-    steps:
-      - name: Notification Slack
-        uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: github-action
           SLACK_TITLE: Post Title
