@@ -64,15 +64,25 @@ jobs:
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
 
-  messageSlack:
-    needs: repo_updated
-    runs-on: self-hosted
-    steps:
-    - name: Notification Slack
-      uses: actions/checkout@master
-      env:
-        SLACK_CHANNEL: github
-        SLACK_TITLE: Post Title
-        SLACK_USERNAME: mohit
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_MESSAGE: "pipeline completed."
+
+name: Slack Notification
+on:
+push:
+branches:
+- main
+jobs:
+notify:
+runs-on: ubuntu-latest
+steps:
+- name: Install dependencies
+run: |
+echo "Installing dependencies..."
+sudo apt-get install curl
+- name: Get Slack webhook URL
+run: |
+echo "Getting Slack webhook URL..."
+SLACK_WEBHOOK_URL=$(cat .secrets/SLACK_WEBHOOK_URL)
+- name: Send notification to Slack
+run: |
+echo "Sending notification to Slack..."
+curl -X POST -H "Content-Type: application/json" -d '{"text":"New commit pushed to main!"}' $SLACK_WEBHOOK_URL
