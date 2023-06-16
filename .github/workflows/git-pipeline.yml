@@ -77,3 +77,8 @@ jobs:
          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
          SLACK_MESSAGE: "This is your custom message."
 
+      POST https://hooks.slack.com/services/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
+         Content-type: application/json
+         {
+          "text": "Hello, world."
+         }
