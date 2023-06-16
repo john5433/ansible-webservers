@@ -1,12 +1,7 @@
-name: Notifier
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+name: Ansible-GitHub actions
+on: push
 jobs:
+  repo_updated:
 
   messageSlack:
     runs-on: self-hosted
