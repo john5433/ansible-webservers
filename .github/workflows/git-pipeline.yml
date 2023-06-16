@@ -69,7 +69,7 @@ jobs:
      runs-on: self-hosted
      steps:
      - name: Notification Slack
-       uses: skolobov/gh-action-slack@v1
+       uses: uses: keithalpichi/slack-action@0.0.6
        env:
          SLACK_CHANNEL: github
          SLACK_TITLE: Post Title
