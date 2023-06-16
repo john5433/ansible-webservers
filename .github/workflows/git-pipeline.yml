@@ -69,9 +69,8 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Notification Slack
-      uses: actions/checkout@master
       env:
-        SLACK_CHANNEL: github-action
+        SLACK_CHANNEL: github
         SLACK_TITLE: Post Title
         SLACK_USERNAME: mohit
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
