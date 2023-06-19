@@ -68,8 +68,8 @@ jobs:
      needs: repo_updated
      runs-on: self-hosted
      steps:
-     - name: Notification Slack
-       uses: actions/checkout@master
+     - name: Slack Notify
+       uses: rtCamp/action-slack-notify@v2.2.0
        env:
          SLACK_CHANNEL: '#github-action-testing'
          SLACK_TITLE: complete
