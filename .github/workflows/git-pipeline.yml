@@ -69,7 +69,6 @@ jobs:
      runs-on: self-hosted
      steps:
      - name: Notification Slack
-       uses: rtCamp/action-slack-notify@v2
        env:
          SLACK_CHANNEL: '#github'
          SLACK_TITLE: complete
