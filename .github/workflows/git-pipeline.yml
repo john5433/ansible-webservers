@@ -71,7 +71,7 @@ jobs:
      - name: Notification Slack
        uses: keithalpichi/slack-action@0.0.6
        env:
-         SLACK_CHANNEL: github
+         SLACK_CHANNEL: '#github'
          SLACK_TITLE: Post Title
          SLACK_USERNAME: mohit
          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
