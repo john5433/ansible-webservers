@@ -67,9 +67,9 @@ jobs:
   messageSlack:
      needs: repo_updated
      runs-on: self-hosted
+     - uses: actions/checkout@master
      steps:
-     - name: Notification Slack
-     - uses: actions/checkout@master 
+     - name: Notification Slack 
        env:
          SLACK_CHANNEL: '#github'
          SLACK_TITLE: complete
