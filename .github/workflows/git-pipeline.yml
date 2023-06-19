@@ -72,7 +72,7 @@ jobs:
        uses: actions/checkout@master
        env:
           slack_webhook_url: ${{secrets.SLACK_WEBHOOK_URL}}
-          slack_channel: '#github-action-pipeline'
+          slack_channel: github-action-pipeline
           slack_username: mohit
           status: failure
        if: always()
