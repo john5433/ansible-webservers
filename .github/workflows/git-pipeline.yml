@@ -70,6 +70,8 @@ jobs:
      steps:
      - name: Notification Slack
        uses: 8398a7/action-slack@v3
+       with:
+       status: custom
        env:
          SLACK_CHANNEL: '#github'
          SLACK_TITLE: complete
