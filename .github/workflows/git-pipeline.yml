@@ -67,7 +67,7 @@ jobs:
   messageSlack:
      needs: repo_updated
      runs-on: self-hosted
-     steps:
+    steps:
   - name: Notification Slack
     uses: actions/checkout@master
     env:
