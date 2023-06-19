@@ -67,12 +67,12 @@ jobs:
   messageSlack:
      needs: repo_updated
      runs-on: self-hosted
-    steps:
-    - name: Notification Slack
-      uses: actions/checkout@master
-      env:
-        SLACK_CHANNEL: '#github-action-testing'
-        SLACK_TITLE: complete
-        SLACK_USERNAME: mohit
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_MESSAGE: "This is your custom message."
+     steps:
+     - name: Notification Slack
+       uses: actions/checkout@master
+       env:
+         SLACK_CHANNEL: '#github-action-testing'
+         SLACK_TITLE: complete
+         SLACK_USERNAME: mohit
+         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+         SLACK_MESSAGE: "This is your custom message."
