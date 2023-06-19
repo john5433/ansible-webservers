@@ -74,5 +74,5 @@ jobs:
          SLACK_CHANNEL: '#github'
          SLACK_TITLE: complete
          SLACK_USERNAME: mohit
-         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+         SLACK_WEBHOOK: https://hooks.slack.com/services/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
          SLACK_MESSAGE: "This is your custom message."
