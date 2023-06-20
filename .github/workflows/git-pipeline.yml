@@ -60,8 +60,9 @@ jobs:
 
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
   send-notification:
+      needs: 
       runs-on: self-hosted
-      steps:
+      steps: website-test
         - name: Install dependencies
           run: |
             sudo apt-get update
