@@ -66,10 +66,10 @@ jobs:
       - name: send-notification
       - uses: actions/checkout@master
         if: and( always(), eq(all_jobs_ran, "{{ steps.all_jobs_ran.outputs.count }}") )
-    run: >
-      curl -X POST -H "Content-Type: application/json" -d '{
+        run: >
+        curl -X POST -H "Content-Type: application/json" -d '{
 
-      "text": "Pipeline passed!",
+        "text": "Pipeline passed!",
 
       "attachments": [
        {
