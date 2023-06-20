@@ -64,35 +64,15 @@ jobs:
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
 
-          name: messageSlack
-          on:
-            push:
-              branches:
-                - master
-          jobs:
-            notify:
-              runs-on: self-hosted
-              steps:
-                - name: Checkout code
-                  uses: actions/checkout@v2
-                - name: Slack Notify
-                  uses: rtCamp/action-slack-notify@v2
-                  env:
-                    SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-                  with:
-                     channel: '#github-action-pipeline'
-                     username: mohit
-                     status: failure
-
-
-
-
-
-
-
-
-
-
-
-
-
+on: push
+name: Slack Notification Demo
+jobs:
+  slackNotification:
+    name: Slack Notification
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@master
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
