@@ -75,7 +75,10 @@ jobs:
           CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Send Slack notification on success
-        if: always()
+        if:  and(
+          always(),
+          eq(all_jobs_ran, "${{ steps.all_jobs_ran.outputs.count }}")
+         )
         run: |
           curl -X POST -H "Content-Type: application/json" -d '{
             "text": "Pipeline passed!",
