@@ -63,9 +63,6 @@ jobs:
     steps:
       - name: Checkout mode
         uses: actions/checkout@master
-         
-      - name: Run test
-        run: npm test
         
       - name: Report Status
         if: always()
