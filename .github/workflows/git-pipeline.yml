@@ -58,6 +58,9 @@ jobs:
         run: >
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
+  notification:
+    runs-on: self-hosted
+    steps:
       - name: Report Status
         if: always()
         uses: ravsamhq/notify-slack-action@v1
