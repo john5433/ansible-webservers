@@ -61,6 +61,9 @@ jobs:
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
   send-notification:
     needs: website-test
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@master
     if: and( always(), eq(all_jobs_ran, "{{ steps.all_jobs_ran.outputs.count }}") )
     run: >
       curl -X POST -H "Content-Type: application/json" -d '{
