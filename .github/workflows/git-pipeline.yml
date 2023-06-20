@@ -67,56 +67,44 @@ jobs:
       - uses: actions/checkout@master
         if: and( always(), eq(all_jobs_ran, "{{ steps.all_jobs_ran.outputs.count }}") )
         run: >
-        curl -X POST -H "Content-Type: application/json" -d '{
+          curl -X POST -H "Content-Type: application/json" -d '{
+          "text": "Pipeline passed!",
+          "attachments": [
+          {
+          "color": "36393E",
+          "title": "Pipeline passed!",
+          "text": "The pipeline has passed successfully.",
+          "fields": [
+          {
+          "title": "Commit message",
+          "value": "${{ github.event.commits[0].message }}",
+          "short": true
+           }
+          ]
+          }
+          ]
 
-        "text": "Pipeline passed!",
+          }' secrets.SLACK_WEBHOOK_URL‘‘‘∗∗∗SendSlacknotificationonfailure:∗∗‘‘‘if:and(failure(),not(eq(all jobs ran,"{{ steps.all_jobs_ran.outputs.count }}"))
 
-      "attachments": [
-       {
-      "color": "36393E",
+          )
 
-      "title": "Pipeline passed!",
+          run: |
+           curl -X POST -H "Content-Type: application/json" -d '{
+           "text": "Pipeline failed!",
+           "attachments": [
+          {
+          "color": "FF0000",
+          "title": "Pipeline failed!",
+          "text": "The pipeline has failed.",
+          "fields": [
+          {
+          "title": "Commit message",
+          "value": "${{ github.event.commits[0].message }}",
+          "short": true
+          }
+          ]
+          }
+          ]
 
-      "text": "The pipeline has passed successfully.",
-
-      "fields": [
-
-      {
-
-      "title": "Commit message",
-
-      "value": "${{ github.event.commits[0].message }}",
-
-      "short": true
-         }
-        ]
-      }
-
-      ]
-
-      }' secrets.SLACK_WEBHOOK_URL‘‘‘∗∗∗SendSlacknotificationonfailure:∗∗‘‘‘if:and(failure(),not(eq(all jobs ran,"{{ steps.all_jobs_ran.outputs.count }}"))
-
-      )
-
-      run: |
-        curl -X POST -H "Content-Type: application/json" -d '{
-        "text": "Pipeline failed!",
-        "attachments": [
-        {
-        "color": "FF0000",
-        "title": "Pipeline failed!",
-        "text": "The pipeline has failed.",
-        "fields": [
-        {
-        "title": "Commit message",
-        "value": "${{ github.event.commits[0].message }}",
-        "short": true
-        }
-      ]
-
-      }
-
-      ]
-
-      }' ${{ secrets.SLACK_WEBHOOK_URL }}
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
 
