@@ -80,7 +80,7 @@ jobs:
         if: and(
           always(),
           eq(all_jobs_ran, "${{ steps.all_jobs_ran.outputs.count }}")
-        )
+         )
         run: |
           curl -X POST -H "Content-Type: application/json" -d '{
             "text": "Pipeline passed!",
@@ -103,7 +103,7 @@ jobs:
         if: and(
           failure(),
           not(eq(all_jobs_ran, "${{ steps.all_jobs_ran.outputs.count }}"))
-        )
+         )
         run: |
           curl -X POST -H "Content-Type: application/json" -d '{
             "text": "Pipeline failed!",
