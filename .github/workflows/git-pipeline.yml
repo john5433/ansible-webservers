@@ -59,7 +59,7 @@ jobs:
           workdir="${GITHUB_WORKSPACE}"
 
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
-  Send Notification on Pipeline Status:
+  Send-Notification-on-Pipeline-Status:
   on:
       branches:
         - master
