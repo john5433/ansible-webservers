@@ -1,69 +1,64 @@
+---
 name: Ansible-GitHub actions
 on: push
 jobs:
   repo_updated:
     runs-on: self-hosted
     steps:
-    - uses: actions/checkout@master
-# Script to install ansible :
-
+      - uses: actions/checkout@master
   install_ansible:
     needs: repo_updated
     runs-on: self-hosted
     steps:
-    - name: Installing ansible 
-      run: |
-        sudo apt-get  update -y
-        sudo apt install -y ansible
-        ansible --version
-
-# Script to install ansible-lint :
-
+      - name: Installing ansible
+        run: |
+          sudo apt-get  update -y
+          sudo apt install -y ansible
+          ansible --version
   install_ansible_lint:
     needs: repo_updated
     runs-on: self-hosted
     steps:
-    - name: Installing ansible-lint
-      run: |
-        sudo apt-get update -y
-        sudo apt-get install -y ansible-lint
-        ansible-lint --version
-
-#Script to lint ansible playbooks :
-
+      - name: Installing ansible-lint
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ansible-lint
+          ansible-lint --version
   run_ansible_lint:
-    needs: [install_ansible, install_ansible_lint]
+    needs:
+      - install_ansible
+      - install_ansible_lint
     runs-on: self-hosted
     steps:
-    - name: Linting ansible playbooks
-      run: ansible-lint
-
+      - name: Linting ansible playbooks
+        run: ansible-lint
   install_apache:
     needs: run_ansible_lint
     runs-on: self-hosted
     steps:
-    - name: Installing apache
-      run: |
-        workdir="${GITHUB_WORKSPACE}"
-        ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/apache-install.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
+      - name: Installing apache
+        run: >
+          workdir="${GITHUB_WORKSPACE}"
 
+          ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/apache-install.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
   website-update:
     needs: install_apache
     runs-on: self-hosted
     steps:
       - name: website updating
-        run: |
+        run: >
           workdir="${GITHUB_WORKSPACE}"
+
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-update.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
   website-test:
     needs: website-update
     runs-on: self-hosted
     steps:
       - name: website testing
-        run: |
+        run: >
           workdir="${GITHUB_WORKSPACE}"
-          ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
 
+          ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
   name: Send Notification on Pipeline Status
   on:
     push:
@@ -78,7 +73,7 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y curl
         - name: Get Slack webhook URL
-          run: |
+          run: >
             curl -s https://api.slack.com/apps/C05CE8ZD7PH/webhooks/<WEBHOOK_URL>
           env:
             CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
@@ -107,19 +102,19 @@ jobs:
           if: failure()
           run: |
             curl -X POST -H "Content-Type: application/json" -d '{
-              "text": "Pipeline failed!",
-              "attachments": [
-                {
-                  "color": "#FF0000",
-                  "title": "Pipeline failed!",
-                  "text": "The pipeline has failed.",
-                  "fields": [
-                    {
-                      "title": "Commit message",
-                      "value": "${{ github.event.commits[0].message }}",
-                      "short": true
-                    }
-                  ]
-                }
-              ]
+             "text": "Pipeline failed!",
+             "attachments": [
+               {
+                 "color": "#FF0000",
+                 "title": "Pipeline failed!",
+                 "text": "The pipeline has failed.",
+                 "fields": [
+                   {
+                     "title": "Commit message",
+                     "value": "${{ github.event.commits[0].message }}",
+                     "short": true
+                   }
+                 ]
+               }
+             ]
             }' ${{ secrets.SLACK_WEBHOOK_URL }}
