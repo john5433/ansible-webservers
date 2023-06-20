@@ -63,8 +63,8 @@ jobs:
     needs: website-test
     runs-on: self-hosted
     steps:
-      - name: send-notification
       - uses: actions/checkout@master
+      - name: send-notification
         if: and( always(), eq(all_jobs_ran, "{{ steps.all_jobs_ran.outputs.count }}") )
         run: >
           curl -X POST -H "Content-Type: application/json" -d '{
