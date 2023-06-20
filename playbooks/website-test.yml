@@ -2,7 +2,7 @@
 - name: Test the website
   hosts: webservers
   become: yes
-  become_user: ubuntu
+  become_user: root
 
   tasks:
   - name: Check port 80 is listing on managed node
@@ -41,7 +41,7 @@
 
   - name: Stat index.html
     stat:
-      path: /var/www/html/index.html
+      path: /var/www/html/index
     register: a
 
   - name: Confirm that index.html exists & owned by root
