@@ -61,8 +61,6 @@ jobs:
   notification:
     runs-on: ubuntu-latest
     steps:
-      - name: Run npm
-        run: npm test
       - name: Report Status
         if: always()
         uses: ravsamhq/notify-slack-action@v1
@@ -70,4 +68,4 @@ jobs:
           status: ${{ job.status }}
           notify_when: "success,failure,cancelled,warnings,skipped"
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}      
