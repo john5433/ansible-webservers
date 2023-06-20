@@ -59,50 +59,52 @@ jobs:
           workdir="${GITHUB_WORKSPACE}"
 
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
-  send-notification:
-    needs: website-test
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@master
-      - name: send-notification
-        if: ( eq(all_jobs_ran, "{{ steps.all_jobs_ran.outputs.count }}") )
-        run: >
-          curl -X POST -H "Content-Type: application/json" -d '{
-          "text": "Pipeline passed!",
-          "attachments": [
+    - name: Check if all jobs ran successfully
+    run: |
+      all_jobs_ran=$(jobs -p | wc -l)
+  - name: Send Slack notification on success
+    if: and(
+      always(),
+      eq(all_jobs_ran, "${{ steps.all_jobs_ran.outputs.count }}")
+    )
+    run: |
+      curl -X POST -H "Content-Type: application/json" -d '{
+        "text": "Pipeline passed!",
+        "attachments": [
           {
-          "color": "36393E",
-          "title": "Pipeline passed!",
-          "text": "The pipeline has passed successfully.",
-          "fields": [
-          {
-          "title": "Commit message",
-          "value": "${{ github.event.commits[0].message }}",
-          "short": true
-           }
-          ]
+            "color": "#36393E",
+            "title": "Pipeline passed!",
+            "text": "The pipeline has passed successfully.",
+            "fields": [
+              {
+                "title": "Commit message",
+                "value": "${{ github.event.commits[0].message }}",
+                "short": true
+              }
+            ]
           }
-          ]
-
-          }' secrets.SLACK_WEBHOOK_URL‘‘‘∗∗∗SendSlacknotificationonfailure:∗∗‘‘‘if:and(failure(),not(eq(all jobs ran,"{{ steps.all_jobs_ran.outputs.count }}"))
-          )
-          run: |
-           curl -X POST -H "Content-Type: application/json" -d '{
-           "text": "Pipeline failed!",
-           "attachments": [
+        ]
+      }' ${{ secrets.SLACK_WEBHOOK_URL }}
+  - name: Send Slack notification on failure
+    if: and(
+      failure(),
+      not(eq(all_jobs_ran, "${{ steps.all_jobs_ran.outputs.count }}"))
+    )
+    run: |
+      curl -X POST -H "Content-Type: application/json" -d '{
+        "text": "Pipeline failed!",
+        "attachments": [
           {
-          "color": "FF0000",
-          "title": "Pipeline failed!",
-          "text": "The pipeline has failed.",
-          "fields": [
-          {
-          "title": "Commit message",
-          "value": "${{ github.event.commits[0].message }}",
-          "short": true
+            "color": "#FF0000",
+            "title": "Pipeline failed!",
+            "text": "The pipeline has failed.",
+            "fields": [
+              {
+                "title": "Commit message",
+                "value": "${{ github.event.commits[0].message }}",
+                "short": true
+              }
+            ]
           }
-          ]
-          }
-          ]
-
-          }' ${{ secrets.SLACK_WEBHOOK_URL }}
-
+        ]
+      }' ${{ secrets.SLACK_WEBHOOK_URL }}
