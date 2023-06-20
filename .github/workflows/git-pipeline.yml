@@ -60,7 +60,7 @@ jobs:
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
   notification:
     runs-on: ubuntu-latest
-    needs: website-update
+   # needs: website-update
     steps:
       - name: Checkout mode
         uses: actions/checkout@master
@@ -70,6 +70,6 @@ jobs:
         uses: ravsamhq/notify-slack-action@v1
         with:
           status: ${{ job.status }}
-          notify_when: "failure"
+          notify_when: "success"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
