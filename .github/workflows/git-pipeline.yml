@@ -63,7 +63,7 @@ jobs:
     needs: website-update
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -74,8 +74,11 @@ jobs:
         env:
           CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Check if all jobs ran
+        run: |
+          all_jobs_ran=$(jobs -p | wc -l)
       - name: Send Slack notification on success
-        if:  and(
+        if: and(
           always(),
           eq(all_jobs_ran, "${{ steps.all_jobs_ran.outputs.count }}")
          )
@@ -84,7 +87,7 @@ jobs:
             "text": "Pipeline passed!",
             "attachments": [
               {
-                "color": "36393E",
+                "color": "#36393E",
                 "title": "Pipeline passed!",
                 "text": "The pipeline has passed successfully.",
                 "fields": [
@@ -97,23 +100,4 @@ jobs:
               }
             ]
           }' ${{ secrets.SLACK_WEBHOOK_URL }}
-      - name: Send Slack notification on failure
-        if: failure()
-        run: |
-          curl -X POST -H "Content-Type: application/json" -d '{
-            "text": "Pipeline failed!",
-            "attachments": [
-              {
-                "color": "FF0000",
-                "title": "Pipeline failed!",
-                "text": "The pipeline has failed.",
-                "fields": [
-                  {
-                    "title": "Commit message",
-                    "value": "${{ github.event.commits[0].message }}",
-                    "short": true
-                  }
-                ]
-              }
-            ]
-          }' ${{ secrets.SLACK_WEBHOOK_URL }} 
+  
