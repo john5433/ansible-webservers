@@ -64,9 +64,9 @@ jobs:
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
 
-    on: push
-    name: Slack Notification Demo
-    jobs:
+on: push
+name: Slack Notification Demo
+jobs:
   slackNotification:
     name: Slack Notification
     runs-on: self-hosted
