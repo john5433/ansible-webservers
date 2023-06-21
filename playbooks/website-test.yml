@@ -41,7 +41,7 @@
 
   - name: Stat index.html
     stat:
-      path: /var/www/html/index
+      path: /var/www/html/index.html
     register: a
 
   - name: Confirm that index.html exists & owned by root
