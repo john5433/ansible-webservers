@@ -65,7 +65,7 @@ jobs:
     steps:
       - name: Report Status
         if: always()
-        uses: ravsamhq/notify-slack-action@v1
+        uses: slackapi/slack-github-action@v1.24.0
         with:
           status: ${{ job.status }}
           notify_when: "success,failure,cancelled,warnings,skipped"
