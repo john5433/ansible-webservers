@@ -44,7 +44,7 @@
       path: /var/www/html/index.html
     register: a
 
-   - name: Confirm that index.html exists & owned by root
+  - name: Confirm that index.html exists & owned by root
     assert:
       that:
         - "a.stat.exists"
