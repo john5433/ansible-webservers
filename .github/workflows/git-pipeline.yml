@@ -59,10 +59,7 @@ jobs:
         run: |
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
-  Send-slack-notification:
-    needs: website-update
-    runs-on: self-hosted
-    steps:
+
       - name: Send custom JSON data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@v1.24.0
