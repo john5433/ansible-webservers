@@ -60,13 +60,17 @@ jobs:
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
   
-      - uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-        if: always() # Pick up events even if the job fails or is canceled.    
+  send-slack-message:
+     needs: website-test
+     runs-on: self-hosted
+     steps:
+       - name: Send Slack message
+         uses: slackapi/slack-github-action@v1
+         env:
+           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+           SLACK_CHANNEL: '#github-action'
+           SLACK_USERNAME: 'mohit'
+           SLACK_MESSAGE: 'Pipeline completed successfully!'    
 
    
     
