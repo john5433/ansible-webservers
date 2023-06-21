@@ -60,16 +60,27 @@ jobs:
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
           
-  notification:
-    needs: website-update
-    runs-on: ubuntu-latest
-    steps:
-       - uses: ravsamhq/notify-slack-action@v2
-         if: always()
-         with:
-           status: ${{ job.status }} # required
-         env:
-           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required      
+      - name: Run tests
+         # ... your test step here
+      - name: Notify slack success
+        if: success()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: github-action
+          status: SUCCESS
+          color: good
+
+      - name: Notify slack fail
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: github-action
+          status: FAILED
+          color: danger    
 
    
     
