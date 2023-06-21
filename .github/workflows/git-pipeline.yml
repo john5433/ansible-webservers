@@ -62,12 +62,12 @@ jobs:
           on: push
   
       # Send a message to Slack when the website-test job finishes.
-  post-run:
-    - name: Send Slack notification
-      uses: slackapi/slack-github-action@v1
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_CHANNEL: 'github-slack'
-        SLACK_USERNAME: 'mohit'
-        SLACK_MESSAGE: 'Website test completed successfully.'  
+    post-run:
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: 'github-slack'
+          SLACK_USERNAME: 'mohit'
+          SLACK_MESSAGE: 'Website test completed successfully.'  
     
