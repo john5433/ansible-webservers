@@ -63,15 +63,12 @@ jobs:
   notification:
     needs: website-update
     runs-on: ubuntu-latest
-    steps:
-      - name: Report Status
+      - uses: ravsamhq/notify-slack-action@v2
         if: always()
-        uses: ravsamhq/notify-slack-action@v1
         with:
-          status: ${{ job.status }}
-          notify_when: "success,failure,cancelled,warnings,skipped"
+          status: ${{ job.status }} # required
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}      
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required      
 
    
     
