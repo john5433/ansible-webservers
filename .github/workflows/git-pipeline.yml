@@ -63,12 +63,13 @@ jobs:
   notification:
     needs: website-update
     runs-on: ubuntu-latest
-      - uses: ravsamhq/notify-slack-action@v2
-        if: always()
-        with:
-          status: ${{ job.status }} # required
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required      
+    steps:
+       - uses: ravsamhq/notify-slack-action@v2
+         if: always()
+         with:
+           status: ${{ job.status }} # required
+         env:
+           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required      
 
    
     
