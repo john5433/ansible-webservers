@@ -1,35 +1,70 @@
+---
 name: Ansible-GitHub actions
 on: push
 jobs:
-  all:
-    runs-on: ubuntu-latest
+  repo_updated:
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@master
+  install_ansible:
+    needs: repo_updated
+    runs-on: ubuntu-latest
+    steps:
       - name: Installing ansible
         run: |
           sudo apt-get  update -y
           sudo apt install -y ansible
           ansible --version
           whoami
+  install_ansible_lint:
+    needs: repo_updated
+    runs-on: ubuntu-latest
+    steps:
       - name: Installing ansible-lint
         run: |
           sudo apt-get update -y
           sudo apt-get install -y ansible-lint
           ansible-lint --version
+  run_ansible_lint:
+    needs:
+      - install_ansible
+      - install_ansible_lint
+    runs-on: ubuntu-latest
+    steps:
       - name: Linting ansible playbooks
         run: ansible-lint
+  install_apache:
+    needs: run_ansible_lint
+    runs-on: ubuntu-latest
+    steps:
       - name: Installing apache
         run: >
           workdir="${GITHUB_WORKSPACE}"
+
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/apache-install.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
+  website-update:
+    needs: install_apache
+    runs-on: ubuntu-latest
+    steps:
       - name: website updating
         run: >
           workdir="${GITHUB_WORKSPACE}"
+
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-update.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
+  website-test:
+    needs: website-update
+    runs-on: ubuntu-latest
+    steps:
       - name: website testing
         run: |
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
+      
+  notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: npm
+        run: npm install
       - name: Report Status
         if: always()
         uses: ravsamhq/notify-slack-action@v1
@@ -38,3 +73,4 @@ jobs:
           notify_when: "success,failure,cancelled,warnings,skipped"
         env:
          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  
