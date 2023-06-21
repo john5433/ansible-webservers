@@ -59,7 +59,9 @@ jobs:
         run: |
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
-          
+  Notify_slack_success:
+    runs-on: self-hosted
+    steps:
       - name: Run tests
          # ... your test step here
       - name: Notify slack success
