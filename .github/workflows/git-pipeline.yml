@@ -59,18 +59,14 @@ jobs:
         run: |
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
-  
-  send-slack-message:
-     needs: website-test
-     runs-on: self-hosted
-     steps:
-       - name: Send Slack message
-         uses: slackapi/slack-github-action@v1
-         env:
+      
+      - uses: codedsolar/slack-action@v1
+        with:
+           status: ${{ job.status }}
+        env:
+           SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-           SLACK_CHANNEL: '#github-action'
-           SLACK_USERNAME: 'mohit'
-           SLACK_MESSAGE: 'Pipeline completed successfully!'    
+    
 
    
     
