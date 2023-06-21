@@ -1,14 +1,14 @@
 ---
 name: Ansible-GitHub actions
 on: push
-
+jobs:
   repo_updated:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@master
   install_ansible:
     needs: repo_updated
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Installing ansible
         run: |
@@ -18,7 +18,7 @@ on: push
           whoami
   install_ansible_lint:
     needs: repo_updated
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Installing ansible-lint
         run: |
@@ -29,13 +29,13 @@ on: push
     needs:
       - install_ansible
       - install_ansible_lint
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Linting ansible playbooks
         run: ansible-lint
   install_apache:
     needs: run_ansible_lint
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Installing apache
         run: >
@@ -44,7 +44,7 @@ on: push
           ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/apache-install.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
   website-update:
     needs: install_apache
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: website updating
         run: >
@@ -53,13 +53,13 @@ on: push
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-update.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
   website-test:
     needs: website-update
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: website testing
         run: |
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
-      
+
   notification:
     runs-on: ubuntu-latest
     steps:
