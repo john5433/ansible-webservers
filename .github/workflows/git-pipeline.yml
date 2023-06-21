@@ -15,7 +15,6 @@ jobs:
           sudo apt-get  update -y
           sudo apt install -y ansible
           ansible --version
-          whoami
   install_ansible_lint:
     needs: repo_updated
     runs-on: self-hosted
@@ -59,10 +58,10 @@ jobs:
         run: |
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
-
-  slack-notification:
-    runs-on: self-hosted
-    steps:
+  slackdata:
+     needs: website-update
+     runs-on: self-hosted
+     steps:
       - name: Send custom JSON data to Slack workflow
         if: always()
         id: slack
