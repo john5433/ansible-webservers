@@ -81,17 +81,17 @@ jobs:
                 }
               }
             ]
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-    - name: Send Slack notification on failure
-      if: ${{ failure() }}
-      id: slack_failure
-      uses: slackapi/slack-github-action@v1.24.0
-      with:
-        payload: |
-          {
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - name: Send Slack notification on failure
+        if: ${{ failure() }}
+        id: slack_failure
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
             "text": "GitHub Action pipeline failed!",
             "blocks": [
               {
@@ -102,7 +102,7 @@ jobs:
                 }
               }
             ]
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
