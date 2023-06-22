@@ -17,8 +17,8 @@
       state: started
   - name: Remove the existing index.html
     file:
-      path: /var/www/html/index
-      state: absent
+      path: /var/www/html/index.html
+      state: 
   - name: Create a new empty index.html file
     file:
       path: /var/www/html/index.html
