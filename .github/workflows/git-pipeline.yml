@@ -65,7 +65,7 @@ jobs:
     if: ${{ always() }}
     steps:
       - name: Send Slack notification on failure
-        if: ${{ success() && needs.repo_updated.result == 'success' && needs.install_ansible.result == 'success' && needs.install_ansible_lint.result == 'success' && needs.run_ansible_lint.result == 'success' && needs.install_apache.result == 'success' && needs.website-update.result == 'success' && needs.website-test.result == 'success' }}
+        if: ${{ failure() && (needs.repo_updated.result == 'failure' || needs.install_ansible.result == 'failure' || needs.install_ansible_lint.result == 'failure' || needs.run_ansible_lint.result == 'failure' || needs.install_apache.result == 'failure' || needs.website-update.result == 'failure' || needs.website-test.result == 'failure') }}
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
