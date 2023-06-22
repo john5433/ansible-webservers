@@ -73,9 +73,9 @@ jobs:
          - name: Send Slack notification on report generation (Success)
            if: ${{ success() }}
            uses: slackapi/slack-github-action@v1.24.0
-           with: null
-           payload: |
-             {
+           with:
+             payload: |
+              {
                "text": "Report generated successfully!",
                "blocks": [
                  {
@@ -86,28 +86,28 @@ jobs:
                    }
                  }
                ]
-             }
-             env: null
-             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-             SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+              }
+              env: 
+              SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+              SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
             
          - name: Send Slack notification on report generation (Failure)
            if: ${{ failure() }}
            uses: slackapi/slack-github-action@v1.24.0
-           with: null
-           payload: |
-            {
-              "text": "Report generation failed!",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Report generation failed!"
+           with: 
+             payload: |
+              {
+                "text": "Report generation failed!",
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "Report generation failed!"
+                    }
                   }
-                }
-              ]
-             }
-             env: null
-             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-             SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+                ]
+               }
+               env:
+               SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+               SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
