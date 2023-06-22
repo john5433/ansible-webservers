@@ -65,7 +65,6 @@ jobs:
      runs-on: self-hosted
      steps:
       - name: Send custom JSON data to Slack workflow
-        if: ${{success()}}
         id: slack
         uses: slackapi/slack-github-action@v1.24.0
         with:
