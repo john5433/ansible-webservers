@@ -69,6 +69,7 @@ jobs:
         id: slack_success
         uses: slackapi/slack-github-action@v1.24.0
         with:
+          notify_when: 'success'
           payload: |
             {
               "text": "GitHub Action pipeline succeeded!",
@@ -90,6 +91,7 @@ jobs:
         id: slack_failure
         uses: slackapi/slack-github-action@v1.24.0
         with:
+          notify_when: 'failure'
           payload: |
             {
             "text": "GitHub Action pipeline failed!",
