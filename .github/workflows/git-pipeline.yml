@@ -65,8 +65,8 @@ jobs:
      runs-on: self-hosted
      steps:
       - name: Send custom JSON data to Slack workflow
-        if: ${{success()}}
-        id: slack
+        if: ${{ success() }}
+        id: slack_success
         uses: slackapi/slack-github-action@v1.24.0
         with:
           # For posting a rich message using Block Kit
@@ -86,4 +86,25 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      
+      - name: Send custom JSON data to Slack workflow
+        if: ${{ failure() }}
+        id: slack_failure
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          # For posting a rich message using Block Kit
+          payload: |
+            {
+              "text": "GitHub Action pipeline result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+              "blocks": [
+                {
+                 "type": "section",
+                 "text": {
+                 "type": "mrkdwn",
+                 "text": "GitHub Action pipeline result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+               }
+             }
+            ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
