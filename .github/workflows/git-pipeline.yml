@@ -58,53 +58,51 @@ jobs:
         run: |
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
+          
   slackdata:
-  
-     if: ${{ always() }}
-     needs: [repo_updated, install_ansible, install_ansible_lint, run_ansible_lint, install_apache, website-update, website-test]
-     runs-on: self-hosted
-     steps:
-      - name: Send custom JSON data to Slack workflow
+    if: ${{ always() }}
+    needs: [repo_updated, install_ansible, install_ansible_lint, run_ansible_lint, install_apache, website-update, website-test]
+    runs-on: self-hosted
+    steps:
+      - name: Send Slack notification on success
         if: ${{ success() }}
         id: slack_success
         uses: slackapi/slack-github-action@v1.24.0
         with:
-          # For posting a rich message using Block Kit
           payload: |
             {
-              "text": "GitHub Action pipeline result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+              "text": "GitHub Action pipeline succeeded!",
               "blocks": [
-                {
-                 "type": "section",
-                 "text": {
-                 "type": "mrkdwn",
-                 "text": "GitHub Action pipeline result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-               }
-             }
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "GitHub Action pipeline succeeded!"
+                }
+              }
             ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      - name: Send custom JSON data to Slack workflow
-        if: ${{ failure() }}
-        id: slack_failure
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          # For posting a rich message using Block Kit
-          payload: |
-            {
-              "text": "GitHub Action pipeline result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-              "blocks": [
-                {
-                 "type": "section",
-                 "text": {
-                 "type": "mrkdwn",
-                 "text": "GitHub Action pipeline result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-               }
-             }
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+    - name: Send Slack notification on failure
+      if: ${{ failure() }}
+      id: slack_failure
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        payload: |
+          {
+            "text": "GitHub Action pipeline failed!",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "GitHub Action pipeline failed!"
+                }
+              }
             ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
