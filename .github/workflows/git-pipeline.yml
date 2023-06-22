@@ -65,18 +65,18 @@ jobs:
     if: ${{ always() }}
     steps:
       - name: Send Slack notification on failure
-        if: ${{ success() }}
+        if: ${{ success() && needs.repo_updated.result == 'success' && needs.install_ansible.result == 'success' && needs.install_ansible_lint.result == 'success' && needs.run_ansible_lint.result == 'success' && needs.install_apache.result == 'success' && needs.website-update.result == 'success' && needs.website-test.result == 'success' }}
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
             {
-              "text": "GitHub Action pipeline failed!",
+              "text": "GitHub Action pipeline success!",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "GitHub Action pipeline failed!"
+                    "text": "GitHub Action pipeline success!"
                   }
                 }
               ]
