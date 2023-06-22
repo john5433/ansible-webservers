@@ -50,59 +50,67 @@ jobs:
           workdir="${GITHUB_WORKSPACE}"
 
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-update.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
-  website-test:    
-    needs: website-update   
+  website-test:
+    needs: website-update
     runs-on: self-hosted
     steps:
       - name: website testing
-        run: |
+        run: >
           workdir="${GITHUB_WORKSPACE}"
+
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
     post:
-     always:
-      - name: Generate Report
-        runs-on: self-hosted
-        needs: [repo_updated, install_ansible, install_ansible_lint, run_ansible_lint, install_apache, website-update, website-test, cleanup_job, slackdata]
-        steps:
-        # Steps to generate a report
-          - name: Send Slack notification on report generation (Success)
-            if: ${{ success() }}
-            uses: slackapi/slack-github-action@v1.24.0
-            with:
-            payload: |
-              {
-                "text": "Report generated successfully!",
-                "blocks": [
-                  {
-                    "type": "section",
-                    "text": {
-                      "type": "mrkdwn",
-                      "text": "Report generated successfully!"
+      always:
+        - name: Generate Report
+          runs-on: self-hosted
+          needs:
+            - repo_updated
+            - install_ansible
+            - install_ansible_lint
+            - run_ansible_lint
+            - install_apache
+            - website-update
+            - website-test
+            - cleanup_job
+            - slackdata
+          steps:
+            - name: Send Slack notification on report generation (Success)
+              if: ${{ success() }}
+              uses: slackapi/slack-github-action@v1.24.0
+              with: null
+              payload: |
+                {
+                  "text": "Report generated successfully!",
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "Report generated successfully!"
+                      }
                     }
-                  }
-                ]
-              }
-            env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-          - name: Send Slack notification on report generation (Failure)
-            if: ${{ failure() }}
-            uses: slackapi/slack-github-action@v1.24.0
-            with:
-            payload: |
-              {
-                "text": "Report generation failed!",
-                "blocks": [
-                  {
-                    "type": "section",
-                    "text": {
-                      "type": "mrkdwn",
-                      "text": "Report generation failed!"
+                  ]
+                }
+              env: null
+              SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+              SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+            - name: Send Slack notification on report generation (Failure)
+              if: ${{ failure() }}
+              uses: slackapi/slack-github-action@v1.24.0
+              with: null
+              payload: |
+                {
+                  "text": "Report generation failed!",
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "Report generation failed!"
+                      }
                     }
-                  }
-                ]
-               }
-            env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
- 
+                  ]
+                 }
+              env: null
+              SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+              SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
