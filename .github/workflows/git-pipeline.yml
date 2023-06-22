@@ -66,18 +66,18 @@ jobs:
 
     steps:
       - name: Send Slack notification on failure
-        if: ${{always()}}
+        if: ${{failure()}}
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
             {
-              "text": "GitHub Action pipeline success!",
+              "text": "GitHub Action pipeline failed!",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "GitHub Action pipeline success!"
+                    "text": "GitHub Action pipeline failed!"
                   }
                 }
               ]
