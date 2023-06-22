@@ -66,7 +66,6 @@ jobs:
 
     steps:
       - name: Send Slack notification on failure
-        if: ${{ failure() }}
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
@@ -91,7 +90,6 @@ jobs:
     if: ${{ needs.repo_updated.result == 'success' && needs.install_ansible.result == 'success' && needs.install_ansible_lint.result == 'success' && needs.run_ansible_lint.result == 'success' && needs.install_apache.result == 'success' && needs.website-update.result == 'success' && needs.website-test.result == 'success' }}
     steps:
       - name: Send Slack notification on success
-        if: ${{ success() }}
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
