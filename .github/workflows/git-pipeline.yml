@@ -61,7 +61,7 @@ jobs:
   slack_on_failure:
     runs-on: self-hosted
     needs: [repo_updated, install_ansible, install_ansible_lint, run_ansible_lint, install_apache, website-update, website-test]
-    if: failure() && any(needs.*.result == 'failure')
+    if: failure() && (needs.*.result == 'failure')
     steps:
       - name: Send Slack notification on failure
         uses: slackapi/slack-github-action@v1.24.0
