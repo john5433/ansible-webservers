@@ -59,7 +59,8 @@ jobs:
           workdir="${GITHUB_WORKSPACE}"
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
   slackdata:
-     if: ${{ always() }}
+  
+     if: ${{success() }}
      needs: [repo_updated, install_ansible, install_ansible_lint, run_ansible_lint, install_apache, website-update, website-test]
      runs-on: self-hosted
      steps:
