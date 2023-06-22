@@ -16,7 +16,7 @@
       enabled: yes
       state: started
   - name: Remove the existing index.html
-    file: 
+    file:
       path: /var/www/html/index.html
       state: absent
   - name: Create a new empty index.html file
