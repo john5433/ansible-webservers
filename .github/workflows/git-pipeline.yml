@@ -65,7 +65,7 @@ jobs:
     if: ${{ always() }}
     steps:
       - name: Send Slack notification on failure
-        if: ${{ failure() }}
+        if: ${{ success() }}
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
