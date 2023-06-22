@@ -59,10 +59,10 @@ jobs:
           workdir="${GITHUB_WORKSPACE}"
 
           ANSIBLE_HOST_KEY_CHECKING=False export ANSIBLE_ROLES_PATH=$workdir/roles && ansible-playbook -u ubuntu -i $workdir/host_inventory $workdir/playbooks/website-test.yml --private-key '/home/ubuntu/.ssh/vm-instance-key.pem'
-post:
-  - name: Generate Report
-    uses: ynab/slack-post-message-action@v1.1
-    needs:
+  post:
+    - name: Generate Report
+      uses: ynab/slack-post-message-action@v1.1
+      needs:
         - repo_updated
         - install_ansible
         - install_ansible_lint
@@ -70,7 +70,7 @@ post:
         - install_apache
         - website-update
         - website-test
-    steps:
+      steps:
         - name: Send Slack notification on report generation (Success)
           if: ${{ success() }}
           uses: slackapi/slack-github-action@v1.24.0
