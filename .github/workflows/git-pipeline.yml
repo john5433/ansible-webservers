@@ -119,7 +119,7 @@ jobs:
         with:
            serverId: my-jfrog-server
            token: ${{ secrets.JFROG_CLI_TOKEN }}
-           repository: my-repository
+           repository: github-action
       - name: Create Artifact
         run: >
           workdir="${GITHUB_WORKSPACE}"
