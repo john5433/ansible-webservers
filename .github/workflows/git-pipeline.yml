@@ -114,14 +114,19 @@ jobs:
     needs: website-test
     runs-on: self-hosted
     steps:
-     - name: Store Artifacts
-       uses: jfrog/setup-jfrog-cli@v1
-       with:
-         serverId: my-jfrog-server
-         token: ${{ secrets.JFROG_CLI_TOKEN }}
-         repository: github-action
-     - name: Upload Artifacts
-       uses: actions/upload-artifact@v2
-       with:
-         name: apache-artifact
-         path: /tmp/apache.tar.gz
+      - name: Store Artifacts
+        uses: jfrog/setup-jfrog-cli@v1
+        with:
+           serverId: my-jfrog-server
+           token: ${{ secrets.JFROG_CLI_TOKEN }}
+           repository: my-repository
+      - name: Create Artifact
+        run: >
+          workdir="${GITHUB_WORKSPACE}"
+          mkdir -p /tmp/artifacts
+          cp -r /tmp/apache.tar.gz /tmp/artifacts/
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+           name: apache-artifact
+           path: /tmp/artifacts/apache.tar.gz
