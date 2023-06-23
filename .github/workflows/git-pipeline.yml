@@ -124,7 +124,7 @@ jobs:
         run: >
           workdir="${GITHUB_WORKSPACE}"
           mkdir -p /tmp/artifacts
-          cp -r /tmp/apache.tar.gz /tmp/artifacts/
+          cp /tmp/apache.tar.gz /tmp/artifacts/
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
