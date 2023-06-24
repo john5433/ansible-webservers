@@ -117,7 +117,7 @@ jobs:
       - name: Create artifact
         run: |
           mkdir -p artifacts
-          cp -r website-update.yml/ ./artifacts/
+          cp -r ~/playbooks/ ./artifacts/
           echo "Created artifact"
   store_artifact:
     needs: create_artifact
