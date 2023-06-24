@@ -110,10 +110,16 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - name: Manual approval
+  manual_approval:
+    needs: website-test
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@master
+      - name: Manual Approval
         uses: actions/manual-workflow-approval@v2
         with:
-          reviewers: 'janedoe, johndoe'
-             
-             
-           
+          reviewer:
+            - john5433
+        
+            
+            
