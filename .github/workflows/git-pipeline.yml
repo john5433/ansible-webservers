@@ -116,15 +116,17 @@ jobs:
     steps:
       - name: Create artifact
         run: |
-          mkdir -p artifacts
-          cp -r ~/playbooks/ ./artifacts/
-          echo "Created artifact"
-  store_artifact:
+          echo "This is my artifact" > artifact.txt
+          actions/upload-artifact@v2
+          with:
+            name: artifact.txt
+  upload_artifact_to_jfrog:
     needs: create_artifact
     runs-on: self-hosted
     steps:
-      - uses: actions/setup-jfrog@v3
-      - name: Store artifact
-        run: |
-          jfrog rt upload artifacts/website-update --server-url https://my-jfrog-server.com/artifactory --user mohit@arintech.in --password Mohit@123
-          echo "Stored artifact"
+      - name: Upload artifact to JFrog
+        uses: jfrog/upload-artifact@v2
+        with:
+          url: https://arintech01.jfrog.io/ui/admin/repositories/virtual
+          credentials: ${{ secrets.JFROG_CLI_TOKEN }}
+          name: artifact.txt
