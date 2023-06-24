@@ -30,7 +30,7 @@ steps:
     - name: Gradle Build and generating apk files
       run: ./gradlew build
       
-          - name: Copy APK files to a directory
+    - name: Copy APK files to a directory
       run: |
          mkdir -p apk-files/debug apk-files/release
          
