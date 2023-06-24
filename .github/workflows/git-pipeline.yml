@@ -110,22 +110,10 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  create_artifact:
-    needs: website-test
-    runs-on: self-hosted
-    steps:
-      - name: Create artifact
-        run: |
-          echo "This is my artifact" > artifact.txt
-          with:
-            name: artifact.txt
-  upload_artifact_to_jfrog:
-    needs: create_artifact
-    runs-on: self-hosted
-    steps:
-      - name: Upload artifact to JFrog
-        uses: jfrog/upload-artifact@v2
+      - name: Manual approval
+        uses: actions/manual-workflow-approval@v2
         with:
-          url: https://arintech01.jfrog.io/ui/admin/repositories/virtual
-          credentials: ${{ secrets.JFROG_CLI_TOKEN }}
-          name: artifact.txt
+          reviewers: 'janedoe, johndoe'
+             
+             
+           
